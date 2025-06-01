@@ -1,29 +1,33 @@
+# ChatBot-API 
+This is the backend API for the AI-Powered Real-Time Chatbot built with ASP.NET Core 8, SignalR, and Tavily AI.
 
-AI-Powered Real-Time Chatbot with .NET Core, SignalR & Tavily AI
-Features...
+##  Tech Stack
+- ASP.NET Core 8 Web API
+- Entity Framework Core (Code First)
+- SQL Server
+- ASP.NET Identity with JWT Authentication
+- SignalR for real-time communication
+- Tavily AI for intelligent chatbot responses
 
-Real-Time Messaging — Instant communication using SignalR ,
-Tavily AI Integration — Smart responses via Tavily AI API ,
-Secure Authentication — Login/registration with ASP.NET Identity + JWT ,
-Chat History — Paginated & filterable message retrieval ,
-Message Moderation — Edit, delete (soft), and approve messages ,
-Infinite Scroll Support — Dynamically load older messages ,
+##  Features
+- User Registration & Login (JWT-based)
+- Real-time Chat using SignalR
+- Tavily AI API Integration
+- Chat history (Create, Read, Update, Delete)
+- Session-based conversation tracking
+- Role-based Authorization
+- Secure HMAC-based message integrity
 
+## Endpoints
+POST /api/auth/register
 
+POST /api/auth/login
 
-API Endpoints...
-Authentication ,
+GET /api/chat/session/{sessionId}
 
-POST	- /api/auth/register	Register new user ,
-POST	- /api/auth/login	Login and receive JWT ,
+POST /api/chat/send
 
+PUT /api/chat/edit/{id}
 
-POST -	/api/chat/send	- Send a user message, get AI reply ,
-GET -	/api/chat/history -	Get paginated message history ,
-PUT -	/api/chat/{id} -	Edit a message ,
-DELETE -	/api/chat/{id} -	Soft-delete a message ,
-PATCH -	/api/chat/{id}/approve	- Approve a message 
+DELETE /api/chat/delete/{id}
 
-
-Hub URL	Description...
-/chathub	SignalR hub for live updates
