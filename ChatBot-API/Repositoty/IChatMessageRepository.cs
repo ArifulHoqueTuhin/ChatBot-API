@@ -10,6 +10,8 @@ namespace ChatBot_API.Repositoty
             Task<IEnumerable<ChatMessage>> GetMessagesBySessionAsync(string sessionId);
 
             Task<IEnumerable<ChatMessage>> GetPaginatedMessagesAsync(string userId, int page, int pageSize);
+
+            Task<ChatMessage?> GetBotReplyForUserMessage(ChatMessage userMessage);
     }
 }
     

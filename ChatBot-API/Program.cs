@@ -29,8 +29,8 @@ var provider = builder.Services.BuildServiceProvider();
 var config = provider.GetRequiredService<IConfiguration>();
 builder.Services.AddDbContext<ApplicationDbContext>(item => item.UseSqlServer(config.GetConnectionString("dbcs")));
 
-builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
-builder.Services.AddScoped<IMessageEditRepository, MessageEditRepository>();
+//builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+//builder.Services.AddScoped<IMessageEditRepository, MessageEditRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

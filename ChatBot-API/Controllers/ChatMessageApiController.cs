@@ -33,6 +33,7 @@ namespace ChatBot_API.Controllers
                 return BadRequest(ModelState);
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("Invalid user.");
 
@@ -51,6 +52,7 @@ namespace ChatBot_API.Controllers
                 await _unitOfWork.ChatMessages.AddAsync(userMessage);
                 await _unitOfWork.SaveAsync();
             }
+           
             catch (DbUpdateException ex)
             {
                 return StatusCode(500, $"DB Error (user message): {ex.InnerException?.Message ?? ex.Message}");
@@ -106,11 +108,36 @@ namespace ChatBot_API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var messages = await _unitOfWork.ChatMessages.GetPaginatedMessagesAsync(userId, page, pageSize);
+
             return Ok(messages);
         }
 
 
-      
+
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> EditMessage(int id, [FromBody] string updatedText)
+        //{
+        //    var message = await _unitOfWork.ChatMessages.GetByIdAsync(id);
+        //    if (message == null || message.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+        //        return NotFound();
+
+        //    var edit = new MessageEdit
+        //    {
+        //        ChatMessageId = message.Id,
+        //        PreviousMessage = message.Message,
+        //        EditedAt = DateTime.UtcNow
+        //    };
+
+        //    message.Message = updatedText;
+
+        //    await _unitOfWork.MessageEdits.AddAsync(edit);
+        //    await _unitOfWork.SaveAsync();
+
+
+        //    return Ok(message);
+        //}
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> EditMessage(int id, [FromBody] string updatedText)
         {
@@ -118,6 +145,7 @@ namespace ChatBot_API.Controllers
             if (message == null || message.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 return NotFound();
 
+            // Save edit history
             var edit = new MessageEdit
             {
                 ChatMessageId = message.Id,
@@ -125,16 +153,56 @@ namespace ChatBot_API.Controllers
                 EditedAt = DateTime.UtcNow
             };
 
+            // Update user message
             message.Message = updatedText;
+
             await _unitOfWork.MessageEdits.AddAsync(edit);
             await _unitOfWork.SaveAsync();
 
+            // If it's a user message, update the corresponding bot reply
+            if (message.Sender == "user")
+            {
+                // Find bot reply for this user message (you may need to link them in your model ideally)
+                var botReply = await _unitOfWork.ChatMessages.GetBotReplyForUserMessage(message);
+
+                if (botReply != null)
+                {
+                    _unitOfWork.ChatMessages.Delete(botReply); // or soft delete
+                }
+
+                //if (botReply != null)
+                //{
+                //    botReply.IsDeleted = true;
+                //    await _unitOfWork.SaveAsync();
+                //}
+
+
+                // Generate new bot reply
+                var newBotReplyText = await _tavilyService.GetBotResponseAsync(updatedText) ?? "Sorry, I couldn't regenerate a reply.";
+
+                var newBotMessage = new ChatMessage
+                {
+                    UserId = message.UserId,
+                    SessionId = message.SessionId,
+                    Sender = "bot",
+                    Message = newBotReplyText,
+                    Timestamp = DateTime.UtcNow
+                };
+
+                await _unitOfWork.ChatMessages.AddAsync(newBotMessage);
+                await _unitOfWork.SaveAsync();
+
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", "user", message.Message);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", "bot", newBotMessage.Message);
+
+                return Ok(new { user = message, bot = newBotMessage });
+            }
 
             return Ok(message);
         }
 
 
-        
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMessage(int id)
         {

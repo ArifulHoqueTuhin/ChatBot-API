@@ -6,7 +6,7 @@ namespace ChatBot_API.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 
 
         public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -17,7 +17,7 @@ namespace ChatBot_API.Models
         {
             base.OnModelCreating(builder);
 
-         builder.Entity<MessageEdit>()
+        builder.Entity<MessageEdit>()
        .HasOne(me => me.ChatMessage)
        .WithMany(cm => cm.Edits)
        .HasForeignKey(me => me.ChatMessageId)
