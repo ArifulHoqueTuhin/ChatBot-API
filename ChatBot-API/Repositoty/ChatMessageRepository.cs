@@ -25,8 +25,8 @@ namespace ChatBot_API.Repositoty
         public async Task<IEnumerable<ChatMessage>> GetMessagesByUserAsync(string userId) =>
             await _context.ChatMessages.Where(m => m.UserId == userId).ToListAsync();
 
-        public async Task<IEnumerable<ChatMessage>> GetMessagesBySessionAsync(string sessionId) =>
-            await _context.ChatMessages.Where(m => m.SessionId == sessionId).ToListAsync();
+        //public async Task<IEnumerable<ChatMessage>> GetMessagesBySessionAsync(string sessionId) =>
+        //    await _context.ChatMessages.Where(m => m.SessionId == sessionId).ToListAsync();
 
 
         public async Task<IEnumerable<ChatMessage>> GetPaginatedMessagesAsync(string userId, int page, int pageSize)
