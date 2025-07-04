@@ -28,6 +28,8 @@ namespace ChatBot_API.Repositoty
         //public async Task<IEnumerable<ChatMessage>> GetMessagesBySessionAsync(string sessionId) =>
         //    await _context.ChatMessages.Where(m => m.SessionId == sessionId).ToListAsync();
 
+        public async Task<IEnumerable<ChatMessage>> MessagesBySessionAsync(string sessionId) =>
+       await _context.ChatMessages.Where(m => m.SessionId == sessionId).ToListAsync();
 
         public async Task<IEnumerable<ChatMessage>> GetPaginatedMessagesAsync(string userId, int page, int pageSize)
             => await _context.ChatMessages
