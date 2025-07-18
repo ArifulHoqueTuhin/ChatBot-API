@@ -45,7 +45,7 @@ namespace ChatBot_API.Repositoty
                 }
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Tavily Raw JSON: {responseContent}");
+                //Console.WriteLine($"Tavily Raw JSON: {responseContent}");
 
                
                 using var jsonDoc = JsonDocument.Parse(responseContent);
