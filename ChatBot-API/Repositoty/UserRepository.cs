@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using ChatBot_API.Data;
 
 namespace ChatBot_API.Repositoty
 {

@@ -1,6 +1,5 @@
 ﻿using ChatBot_API.Models.DTO;
 using ChatBot_API.Repositoty;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatBot_API.Controllers

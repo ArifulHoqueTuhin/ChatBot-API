@@ -1,4 +1,4 @@
-﻿namespace ChatBot_API.Repositoty
+﻿namespace ChatBot_API.Tavily
 {
     public interface ITavilyService
     {

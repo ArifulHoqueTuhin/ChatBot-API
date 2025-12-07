@@ -6,7 +6,6 @@ namespace ChatBot_API.Repositoty
     {
         bool IsUniqueEmail(string email);
         Task<LoginResponseDto> Login(LoginRequestDto loginRequestDTO);
-
         Task<RegistrationResponseDto> Registration(RegistrationRequestDto registrationRequestDTO);
     }
 }
