@@ -15,9 +15,7 @@ namespace ChatBot_API.Repositoty
             MessageEdits = new MessageEditRepository(context);
         }
 
-      
         public async Task<int> SaveAsync() => await _context.SaveChangesAsync();
-    } 
-    
-    
+    }
+
 }

@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace ChatBot_API.Repositoty
 {
     public class UserRepository : IUserRepository
@@ -50,11 +51,10 @@ namespace ChatBot_API.Repositoty
                 return new LoginResponseDto()
                 {
                     Token = "",
-                    
+
                 };
 
             }
-
 
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -63,14 +63,12 @@ namespace ChatBot_API.Repositoty
 
             var Key = Encoding.ASCII.GetBytes(SecretKey);
 
-
             var TokenDescriptor = new SecurityTokenDescriptor
 
             {
                 Subject = new ClaimsIdentity(new Claim[]
-
                 {
-                        
+
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim(ClaimTypes.Role, roles.FirstOrDefault())
                 }),
@@ -79,29 +77,23 @@ namespace ChatBot_API.Repositoty
 
                 SigningCredentials = new(new SymmetricSecurityKey(Key), SecurityAlgorithms.HmacSha256Signature)
 
-
-
-
             };
 
 
             var Token = TokenHandler.CreateToken(TokenDescriptor);
 
-            
             LoginResponseDto loginResponseDTO = new LoginResponseDto()
 
             {
-               Token = TokenHandler.WriteToken(Token),
-               UserId = user.Id,
-               Name = user.Name,
-               Email = user.Email
+                Token = TokenHandler.WriteToken(Token),
+                UserId = user.Id,
+                Name = user.Name,
+                Email = user.Email
 
             };
 
             return loginResponseDTO;
         }
-
-
 
         public async Task<RegistrationResponseDto> Registration(RegistrationRequestDto registrationRequestDTO)
         {
@@ -130,19 +122,15 @@ namespace ChatBot_API.Repositoty
                         await _roleManager.CreateAsync(new IdentityRole("customer"));
                     }
 
-                   
+
                     string roleToAssign = string.IsNullOrWhiteSpace(registrationRequestDTO.Role) ? "customer" : registrationRequestDTO.Role.ToLower();
 
                     if (roleToAssign != "admin" && roleToAssign != "customer")
                     {
-                        roleToAssign = "customer"; 
+                        roleToAssign = "customer";
                     }
 
                     await _userManager.AddToRoleAsync(newUser, roleToAssign);
-
-
-
-
 
                     var UserToReturn = await _dbData.ApplicationUsers.FirstOrDefaultAsync(u => u.Email == registrationRequestDTO.Email);
 
@@ -152,8 +140,6 @@ namespace ChatBot_API.Repositoty
                         Message = "User registration successful"
 
                     };
-
-
 
                 };
 
@@ -168,5 +154,5 @@ namespace ChatBot_API.Repositoty
     }
 }
 
-    
+
 

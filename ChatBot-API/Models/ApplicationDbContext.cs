@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatBot_API.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -17,11 +17,12 @@ namespace ChatBot_API.Models
         {
             base.OnModelCreating(builder);
 
-         builder.Entity<MessageEdit>()
-       .HasOne(me => me.ChatMessage)
-       .WithMany(cm => cm.Edits)
-       .HasForeignKey(me => me.ChatMessageId)
-       .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<MessageEdit>()
+           .HasOne(me => me.ChatMessage)
+           .WithMany(cm => cm.Edits)
+           .HasForeignKey(me => me.ChatMessageId)
+           .OnDelete(DeleteBehavior.Cascade);
+
         }
 
     }

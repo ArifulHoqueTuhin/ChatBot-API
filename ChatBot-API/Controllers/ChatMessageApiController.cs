@@ -1,7 +1,6 @@
 ﻿using ChatBot_API.Models;
 using System.Security.Claims;
 using ChatBot_API.Repositoty;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using ChatBot_API.Models.DTO;
@@ -24,7 +23,7 @@ namespace ChatBot_API.Controllers
             _tavilyService = tavilyService;
             _hubContext = hubContext;
         }
- 
+
 
         [HttpPost("send")]
         public async Task<IActionResult> SendMessage([FromBody] ChatMessageRequestDto request)
@@ -47,7 +46,7 @@ namespace ChatBot_API.Controllers
 
             try
             {
-               
+
                 await _unitOfWork.ChatMessages.AddAsync(userMessage);
                 await _unitOfWork.SaveAsync();
             }
@@ -58,9 +57,9 @@ namespace ChatBot_API.Controllers
 
             try
             {
-               
+
                 var botReply = await _tavilyService.GetBotResponseAsync(request.Message);
-                
+
                 if (string.IsNullOrWhiteSpace(botReply))
                 {
                     botReply = "Sorry, I couldn't generate a response right now.";
@@ -75,11 +74,11 @@ namespace ChatBot_API.Controllers
                     Timestamp = DateTime.UtcNow
                 };
 
-                
+
                 await _unitOfWork.ChatMessages.AddAsync(botMessage);
                 await _unitOfWork.SaveAsync();
 
-               
+
                 await _hubContext.Clients.All.SendAsync("ReceiveMessage", userMessage.Sender, userMessage.Message);
                 await _hubContext.Clients.All.SendAsync("ReceiveMessage", botMessage.Sender, botMessage.Message);
 
@@ -94,7 +93,7 @@ namespace ChatBot_API.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Tavily AI failed: {ex.Message}");
-          
+
             }
         }
 
@@ -110,7 +109,6 @@ namespace ChatBot_API.Controllers
         }
 
 
-      
         [HttpPut("{id}")]
         public async Task<IActionResult> EditMessage(int id, [FromBody] string updatedText)
         {
@@ -134,7 +132,7 @@ namespace ChatBot_API.Controllers
         }
 
 
-        
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMessage(int id)
         {
@@ -144,11 +142,11 @@ namespace ChatBot_API.Controllers
 
             message.IsDeleted = true;
             await _unitOfWork.SaveAsync();
-           
+
             return NoContent();
         }
 
-        
+
         [Authorize(Roles = "admin")]
 
         [HttpPatch("{id}/approve")]
@@ -160,8 +158,9 @@ namespace ChatBot_API.Controllers
 
             message.IsApproved = updatedText;
             await _unitOfWork.SaveAsync();
-         
+
             return Ok(message);
         }
     }
 }
+

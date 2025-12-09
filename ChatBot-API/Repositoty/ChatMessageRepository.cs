@@ -1,4 +1,5 @@
-﻿using ChatBot_API.Models;
+﻿
+using ChatBot_API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatBot_API.Repositoty

@@ -1,6 +1,5 @@
 ﻿using ChatBot_API.Models.DTO;
 using ChatBot_API.Repositoty;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatBot_API.Controllers
@@ -10,12 +9,10 @@ namespace ChatBot_API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserRepository dbData;
-
         public AuthController(IUserRepository DbData)
         {
             dbData = DbData;
         }
-
 
 
         [HttpPost("login")]
@@ -24,15 +21,15 @@ namespace ChatBot_API.Controllers
             var loginResponse = await dbData.Login(model);
 
 
-          if (string.IsNullOrEmpty(loginResponse.Token))
+            if (string.IsNullOrEmpty(loginResponse.Token))
             {
                 return NotFound("User not found");
             }
 
             return Ok(new
             {
-                
-                
+
+
                 token = loginResponse.Token,
                 userId = loginResponse.UserId,
                 email = loginResponse.Email,
@@ -41,9 +38,6 @@ namespace ChatBot_API.Controllers
 
             });
         }
-
-
-
 
 
         [HttpPost("register")]
@@ -73,5 +67,6 @@ namespace ChatBot_API.Controllers
 }
 
 
-    
+
+
 
