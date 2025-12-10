@@ -30,16 +30,6 @@ jobs:
     - name: Publish
       run: dotnet publish -c Release -o ./publish
 
-    # OPTIONAL: Apply EF Core Migrations (if using SQL)
-    - name: Install dotnet-ef
-      run: dotnet tool install --global dotnet-ef
-
-    - name: Apply Database Migration
-      if: env.AZURE_SQL_CONNECTION != ''
-      env:
-        AZURE_SQL_CONNECTION: ${{ secrets.AZURE_SQL_CONNECTION }}
-      run: dotnet ef database update --connection "$AZURE_SQL_CONNECTION"
-
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
       with:
@@ -49,5 +39,7 @@ jobs:
         package: ./publish
 
 
+
           
+
 
