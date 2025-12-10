@@ -35,11 +35,12 @@ jobs:
       with:
         app-name: YOUR_APP_SERVICE_NAME
         slot-name: Production
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.CHATBOTSECRET }}
         package: ./publish
 
 
 
           
+
 
 
